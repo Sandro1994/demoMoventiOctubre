@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BD_AjinomotoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="EstadoTarea">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="varchar" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="Tareas">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Titulo" Type="varchar" MaxLength="200" />
+    <Property Name="Descripcion" Type="varchar" MaxLength="200" />
+    <Property Name="IdEstadoTarea" Type="int" />
+    <Property Name="FechaCreacion" Type="datetime" />
+    <Property Name="UsuarioCreacion" Type="int" />
+    <Property Name="FechaModificacion" Type="datetime" />
+    <Property Name="UsuarioModificacion" Type="int" />
+  </EntityType>
+  <EntityType Name="Usuarios">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Correo" Type="varchar" MaxLength="100" />
+    <Property Name="Contrasena" Type="varchar" MaxLength="100" />
+    <Property Name="Nombres" Type="varchar" MaxLength="100" />
+    <Property Name="Apellidos" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityContainer Name="BD_AjinomotoModelStoreContainer">
+    <EntitySet Name="EstadoTarea" EntityType="Self.EstadoTarea" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Tareas" EntityType="Self.Tareas" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>
