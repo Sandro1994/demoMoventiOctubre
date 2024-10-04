@@ -35,6 +35,7 @@ namespace RetoTecnicoAjinomoto.Controllers
                     }
                     else
                     {
+                        var token = GenerateJwtToken(); //si el usuario logueado existe se genera el JWT para ser utilizado como seguridad en todo el proyecto.
                         var listadoTareas = context.Tareas.ToList();
                         //Realizamos un match para obtener la descripción estado de tareas para ser visualizado en pantalla (completas | incompletas).
                         foreach (var item in listadoTareas)
@@ -48,6 +49,7 @@ namespace RetoTecnicoAjinomoto.Controllers
                         
                         var modelo = new TareasViewModelRegister  //llenamos un objeto viewModel que nos servira para presentar el jwt y el listado de estados en la ventana principal de busqueda.
                         {
+                            JWT = token,
                             ListaEstadoTareas = estadosTarea
                         };
 
@@ -67,6 +69,25 @@ namespace RetoTecnicoAjinomoto.Controllers
             //Decodificación base64
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
             return System.Convert.ToBase64String(plainTextBytes);
+        }
+
+        private string GenerateJwtToken()
+        {
+            //Generación JWT mediante un apiKey global que se encuentra en el startUp.
+            var key = Encoding.ASCII.GetBytes(SecretKey);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Name, "usuario")
+                }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }
