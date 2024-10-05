@@ -1,0 +1,134 @@
+﻿@model RetoTecnicoAjinomoto.ViewModels.TareasViewModelRegister
+
+@{
+    ViewBag.Title = "Edit";
+}
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <div class="navbar-header">
+                <ul class="nav navbar-nav">
+                    <li><h2 style="color:white">Editar Tarea</h2></li>
+                </ul>
+
+            </div>
+            <div class="navbar-collapse right">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Regresar", "Index", "Tareas")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<br />
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <br />
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @*@Html.HiddenFor(model => model.Id)*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Tarea.Titulo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Tarea.Titulo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Tarea.Titulo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Tarea.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Tarea.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Tarea.Descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Tarea.IdEstadoTarea, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Tarea.IdEstadoTarea,
+                new SelectList(Model?.ListaEstadoTareas, "Id", "Nombre"), "Seleccione un estado", new { @class = "form-control", id = "estadoDropdown" })
+            </div>
+
+            @*@Html.LabelFor(model => model.IdEstadoTarea, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.IdEstadoTarea, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.IdEstadoTarea, "", new { @class = "text-danger" })
+                </div>*@
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Editar" class="btn btn-default" onclick="guardarTarea()"/>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+
+
+    function guardarTarea() {
+        debugger;
+        var url = window.location.href;
+
+        // Extraer el ID de la URL
+        var id = url.substring(url.lastIndexOf('/') + 1);
+
+        // Crear un objeto JSON
+        tareaJson = {
+            id: id,
+            titulo: $('input[name="Tarea.Titulo"]').val(),
+            descripcion: $('input[name="Tarea.Descripcion"]').val(),
+            idEstadoTarea: $('#estadoDropdown').val()
+        };
+
+        // Llamada AJAX usando POST para enviar el objeto JSON
+        $.ajax({
+            url: 'Edit',  // Acción del controlador
+            type: 'POST',
+            contentType: 'application/json',  // Especifica que estás enviando JSON
+            data: JSON.stringify(tareaJson),  // Convierte el objeto a formato JSON
+            success: function (response) {
+                debugger;
+
+
+
+                Swal.fire({
+                    title: (response.Codigo == "OK") ? '¡Éxito!' : "Error",
+                    text: response.Mensaje,
+                    icon: 'success',
+                    timer: 20000,
+                    confirmButtonText: (response.Codigo == "OK") ? 'OK' : "ERROR"
+                });
+
+                if (response.Codigo == "OK") {
+                    setTimeout(function () {
+                        window.location.href = 'Index';
+                    }, 5000); // Redirige después de 3 segundos
+
+                }
+
+
+            },
+            error: function (xhr, status, error) {
+                debugger;
+                alert("Error: " + error);
+            }
+        });
+    }
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

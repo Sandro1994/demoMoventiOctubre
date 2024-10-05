@@ -1,0 +1,30 @@
+﻿<html>
+<head>
+    @*<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>*@
+    <link href="~/Content/Css/login-style.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <br />
+            <div class="fadeIn first">
+                <img src="~/Content/Images/Ajinomoto-Logo.png" id="icon" alt="User Icon"/>
+            </div>
+            <!-- Login Form -->
+            <form action="@Url.Action("Login","Acceso")" method="post">
+                <input type="text" id="login" class="fadeIn second" name="Usuario" placeholder="Usuario" autocomplete="off">
+                <input type="password" id="password" class="fadeIn third" name="Contrasena" placeholder="Contraseña" autocomplete="off">
+                <input type="submit" class="fadeIn fourth" value="Iniciar Sesión">
+            </form>
+
+            <!-- Remind Passowrd -->
+            <div id="formFooter">
+                <a class="underlineHover" href="#">¿Olvidaste la contraseña?</a>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

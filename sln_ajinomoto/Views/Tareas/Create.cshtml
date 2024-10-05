@@ -1,0 +1,152 @@
+﻿
+
+@{
+    ViewBag.Title = "Create";
+}
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <div class="navbar-header">
+                <ul class="nav navbar-nav">
+                    <li><h2 style="color:white">Crear Tarea</h2></li>
+                </ul>
+                
+            </div>
+            <div class="navbar-collapse right">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Regresar", "Index", "Tareas", new {  })</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="col-md-10">
+                <label>Título</label>
+            </div>
+            <div class="col-md-10">
+                <input type="text" id="titulo" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <label>Descripción</label>
+            </div>
+            
+            <div class="col-md-10">
+                <input type="text" id="descripcion" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <label>Estado</label>
+            </div>
+            <div class="col-md-10">
+                <select id="miSelect"></select>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="button" value="Registrar" class="btn btn-default" onclick="guardarTarea()" />
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        debugger;
+        $.ajax({
+            url: 'ObtenerTareas',  // Acción del controlador
+            type: 'GET',
+            dataType: 'json', // Tipo de datos que se espera recibir
+            success: function (data) {
+                // Obtén el elemento <select>
+                const select = document.getElementById("miSelect");
+
+                // Limpiar el <select> antes de llenarlo
+                select.innerHTML = '';
+
+                // Iterar sobre el array y crear elementos <option>
+                data.forEach((opcion) => {
+                    const option = document.createElement("option");
+                    option.value = opcion.Id; // Puedes establecer un valor diferente si lo deseas
+                    option.textContent = opcion.Nombre; // Establecer el texto que se mostrará
+                    select.appendChild(option); // Agregar el <option> al <select>
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error("Error al obtener las tareas:", error); // Manejo de errores
+            }
+        });
+    });
+
+
+    function guardarTarea() {
+        debugger;
+        // Crear un objeto JSON
+        const select = document.getElementById("miSelect");
+        tareaJson = {
+            titulo: $("#titulo").val(),
+            descripcion: $("#descripcion").val(),
+            idEstadoTarea: select.value
+        };
+
+        // Llamada AJAX usando POST para enviar el objeto JSON
+        $.ajax({
+            url: 'Create',  // Acción del controlador
+            type: 'POST',
+            contentType: 'application/json',  // Especifica que estás enviando JSON
+            data: JSON.stringify(tareaJson),  // Convierte el objeto a formato JSON
+            success: function (response) {
+                debugger;
+
+                
+
+                Swal.fire({
+                    title: (response.Codigo == "OK") ? '¡Éxito!' : "Error",
+                    text: response.Mensaje,
+                    icon: 'success',
+                    timer: 20000,
+                    confirmButtonText: (response.Codigo == "OK") ? 'OK' : "ERROR"
+                });
+
+                if (response.Codigo == "OK") {
+                    setTimeout(function () {
+                        window.location.href = 'Index';
+                    }, 5000); // Redirige después de 3 segundos
+                   
+                }
+                
+                
+            },
+            error: function (xhr, status, error) {
+                debugger;
+                alert("Error: " + error);
+            }
+        });
+    }
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

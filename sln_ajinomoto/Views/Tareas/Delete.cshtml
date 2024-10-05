@@ -1,0 +1,59 @@
+﻿@model RetoTecnicoAjinomoto.Models.Tareas
+
+@{
+    ViewBag.Title = "Eliminar Tarea";
+}
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <div class="navbar-header">
+                <ul class="nav navbar-nav">
+                    <li><h2 style="color:white">Eliminar Tarea</h2></li>
+                </ul>
+
+            </div>
+            <div class="navbar-collapse right">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Regresar", "Index", "Tareas")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<br />
+<h3>¿Está seguro de eliminar la tarea?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Titulo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Titulo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+
+
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Eliminar" class="btn btn-default" />
+        </div>
+    }
+</div>

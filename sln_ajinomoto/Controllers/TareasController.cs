@@ -1,9 +1,12 @@
 ﻿using RetoTecnicoAjinomoto.Models;
+using RetoTecnicoAjinomoto.Service.Implementation;
+using RetoTecnicoAjinomoto.Service.Interface;
 using RetoTecnicoAjinomoto.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Objects;
 using System.Linq;
-using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
 
 namespace RetoTecnicoAjinomoto.Controllers
@@ -27,37 +30,19 @@ namespace RetoTecnicoAjinomoto.Controllers
             }
         }
 
-        public ActionResult Search(int? id)
+        [HttpGet]
+        public JsonResult ObtenerTareas()
         {
-            try
-            {
-                //if (oTareas.Tarea.Titulo != null && oTareas.Tarea.Descripcion != null && oTareas.Tarea.IdEstadoTarea != null)
-                //{
-                //    using (TareasDbModels context = new TareasDbModels())
-                //    {
-                //        context.Tareas.Add(oTareas.Tarea);
-                //        context.SaveChanges();
-                //        var listadoTareas = context.Tareas.ToList();
-                //        foreach (var item in listadoTareas)
-                //        {
-                //            item.DescripcionEstado = context.EstadoTarea.Where(x => x.Id == item.IdEstadoTarea).FirstOrDefault().Nombre;
-                //        }
-                //        ViewBag.ItemsTarea = listadoTareas;
-                //    }
-                //}
-                return View("~/Views/Tareas/Index.cshtml");
-
-            }
-            catch
-            {
-                return View();
-            }
+            ITareaService _tareaService = new TareaService();
+            // Devuelve el array como un JSON
+            return Json(_tareaService.ObtenerEstadoTareas(), JsonRequestBehavior.AllowGet);
         }
+
 
         // GET: Tareas/Details/5
         public ActionResult Details(int id)
         {
-            using(TareasDbModels context = new TareasDbModels())
+            using (TareasDbModels context = new TareasDbModels())
             {
                 return View(context.Tareas.Where(x => x.Id == id)); //recupera el contexto para ser seteado en la vista detalle
             }
@@ -67,7 +52,7 @@ namespace RetoTecnicoAjinomoto.Controllers
         // GET: Tareas/Create
         public ActionResult Create()
         {
-           
+
             using (TareasDbModels context = new TareasDbModels())
             {
                 var estadosTarea = context.EstadoTarea.ToList();
@@ -79,40 +64,20 @@ namespace RetoTecnicoAjinomoto.Controllers
 
                 return View("~/Views/Tareas/Create.cshtml", modelo);
             }
-           
+
         }
 
         // POST: Tareas/Create
         [HttpPost]
-        public ActionResult Create(TareasViewModelRegister oTareas)
+        public ActionResult Create(Tareas oTareas)
         {
-            try
-            {
-                if (oTareas.Tarea.Titulo != null && oTareas.Tarea.Descripcion != null && oTareas.Tarea.IdEstadoTarea != null)
-                {
-                    using (TareasDbModels context = new TareasDbModels())
-                    {
-                        context.Tareas.Add(oTareas.Tarea);
-                        context.SaveChanges();
-                        var listadoTareas = context.Tareas.ToList();
-                        foreach (var item in listadoTareas)
-                        {
-                            item.DescripcionEstado = context.EstadoTarea.Where(x => x.Id == item.IdEstadoTarea).FirstOrDefault().Nombre;
-                        }
-                        ViewBag.ItemsTarea = listadoTareas;
-                    }
-                }
-                return View("~/Views/Tareas/Index.cshtml");
+            ITareaService _tareaService = new TareaService();
+            return Json(_tareaService.RegistrarTarea(oTareas));
 
-            }
-            catch
-            {
-                return View();
-            }
         }
 
         // GET: Tareas/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
             using (TareasDbModels context = new TareasDbModels())
             {
@@ -131,29 +96,11 @@ namespace RetoTecnicoAjinomoto.Controllers
 
         // POST: Tareas/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, TareasViewModelRegister oTareas)
+        public ActionResult Edit(Tareas oTareas)
         {
-            try
-            {
-                using (TareasDbModels context = new TareasDbModels())
-                {
-                    oTareas.Tarea.Id = id;
-                    context.Entry(oTareas.Tarea).State = System.Data.EntityState.Modified; //Aplicación de la entidad que viaje desde el viewModel para ser modificada
-                    context.SaveChanges(); //guardamos los cambios para que surga efectos.
-                    var listadoTareas = context.Tareas.ToList();
-                    foreach (var item in listadoTareas)
-                    {
-                        item.DescripcionEstado = context.EstadoTarea.Where(x => x.Id == item.IdEstadoTarea).FirstOrDefault().Nombre;
-                    }
-                    ViewBag.ItemsTarea = listadoTareas;
-                }
-                
-                return View("~/Views/Tareas/Index.cshtml");
-            }
-            catch
-            {
-                return View();
-            }
+            ITareaService _tareaService = new TareaService();
+            return Json(_tareaService.EditarTarea(oTareas));
+
         }
 
         // GET: Tareas/Delete/5

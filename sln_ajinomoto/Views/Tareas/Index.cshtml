@@ -1,0 +1,78 @@
+﻿
+
+@{
+    ViewBag.Title = "Tareas";
+}
+
+
+
+<h2>Listado de Tareas</h2>
+@*<h4>Filtro por Estado</h4>
+<div class="form-group">
+    Estado  @Html.DropDownListFor(model => model.Tarea.IdEstadoTarea,
+new SelectList(Model?.ListaEstadoTareas, "Id", "Nombre"), "Seleccione una categoría")
+    @Html.ActionLink("Buscar", "Search", "Tareas", new { id = Model.Tarea?.IdEstadoTarea }, new { @class = "btn btn-info" })
+</div>*@
+
+
+<html>
+<head>
+
+</head>
+<body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                    <div class="navbar-header">
+                        @Html.ActionLink("AJINOMOTO (To-Do-List)", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                    </div>
+                    <div class="navbar-collapse right">
+                        <ul class="nav navbar-nav">
+                            <li>@Html.ActionLink("Cerrar Sesion", "Index", "Tareas")</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <p>
+                @Html.ActionLink("Crear", "Create", "Tareas", "", new { @class = "btn btn-success" })
+            </p>
+            <table class="table">
+                <tr>
+                    <th>
+                        Titulo
+                    </th>
+                    <th>
+                        Descripción
+                    </th>
+                    <th>
+                        Estado
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in ViewBag.ItemsTarea)
+                {
+                    <tr>
+                        <td>
+                            @item.Titulo
+                        </td>
+                        <td>
+                            @item.Descripcion
+                        </td>
+                        <td>
+                            @item.DescripcionEstado
+                        </td>
+
+                        <td>
+                            @Html.ActionLink("Editar", "Edit", "Tareas", new { id = item.Id }, new { @class = "btn btn-warning" }) |
+                            @Html.ActionLink("Eliminar", "Delete", "Tareas", new { id = item.Id }, new { @class = "btn btn-danger" })
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </body>
+        </html>
+
